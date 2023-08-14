@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Offline</title>
+    <style>
+      body {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        min-height: 100vh;
+        background-image: linear-gradient(
+          to bottom,
+          hsl(215, 28%, 17%),
+          hsl(215, 28%, 17%) 60%,
+          hsl(215, 28%, 14%)
+        );
+        color: white;
+        font-family: sans-serif;
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
+      }
+
+      .offline {
+        font-weight: normal;
+        font-size: 2rem;
+      }
+
+      .directions {
+        font-weight: lighter;
+        font-size: 1.5rem;
+      }
+
+      .dino {
+        position: absolute;
+        font-size: 4rem;
+        bottom: 5rem;
+        right: -4rem;
+        animation: dino 10s infinite 2s;
+      }
+
+      @keyframes dino {
+        0% {
+          transform: translateX(4rem);
+        }
+        30% {
+          transform: translateX(-50vw);
+        }
+        35% {
+          transform: translateX(-50vw) scaleX(-1);
+        }
+        45% {
+          transform: translateX(-50vw) scaleX(-1);
+        }
+        55% {
+          transform: translateX(-50vw) scaleX(1);
+        }
+        65% {
+          transform: translateX(-50vw) scaleX(1);
+        }
+        80% {
+          transform: translateX(calc(-100vw - 4rem));
+        }
+        100% {
+          transform: translateX(calc(-100vw - 4rem));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div style="padding: 3rem;">
+      <p class="offline">Você está offline :(</p>
+      <p class="directions">Por favor, fiquei online para continuar utilizando esse app!</p>
+      <p class="dino">🦖</p>
+    </div>
+  </body>
+</html>
