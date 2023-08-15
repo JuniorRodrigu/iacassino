@@ -1,15 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cassino</title>
-    <script type="module" crossorigin src="/assets/index-b4b6999d.js"></script>
-    <link rel="stylesheet" href="/assets/index-8697f83b.css">
-  <link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
-  <body>
-    <div id="app"></div>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cassino</title>
+  <link rel="stylesheet" href="/assets/index-8697f83b.css?v=2">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script>
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+  
+    .modal-content {
+      background-color: #1f2937;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px; 
+      height: 60%; 
+      border-radius: 10px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content input {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .modal-content button {
+      margin-top: 10px; 
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .image-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 1rem 0;
+    }
     
-  </body>
+    .image {
+      max-width: 50%; 
+      height: auto;
+    }
+    
+    .email-input {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    
+
+    .modal-content input,
+    .modal-content button {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+ <!-- Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <div class="image-container">
+        <img src="pfteste.avif" alt="Image" class="image" />
+      </div>
+      
+ 
+      
+  
+      <input type="email" id="emailInput" placeholder="Digite seu e-mail">
+      <button id="enterButton">Entrar</button>
+    </div>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <div id="app"></div>
+
+  <script type="module" crossorigin src="/assets/index-b4b6999d.js"></script>
+  <script>
+    const modal = document.getElementById('modal');
+    const emailInput = document.getElementById('emailInput');
+    const enterButton = document.getElementById('enterButton');
+  
+    // Mostra o modal
+    function openModal() {
+      modal.style.display = 'flex';
+    }
+  
+    // Fecha o modal
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+
+    window.addEventListener('load', openModal);
+  
+
+    enterButton.addEventListener('click', () => {
+      const enteredEmail = emailInput.value;
+  
+
+      closeModal();
+    });
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCPYfZBVEjnqNCiGy6wtrOjrpbNxADA5Xo",
+  authDomain: "ia-cassino.firebaseapp.com",
+  projectId: "ia-cassino",
+  storageBucket: "ia-cassino.appspot.com",
+  messagingSenderId: "838304686676",
+  appId: "1:838304686676:web:bf4529a536d577f28083c1",
+  measurementId: "G-93EF9M43PM"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+
+
+enterButton.addEventListener('click', () => {
+  const enteredEmail = emailInput.value;
+
+
+  database.ref('emails').push({
+    email: enteredEmail,
+    timestamp: firebase.database.ServerValue.TIMESTAMP
+  });
+
+  closeModal();
+});
+
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js"></script>
+</body>
+
+
 </html>

@@ -1,13 +1,20 @@
 (function () {
+  // Verifica se o navegador suporta modulepreload
   const t = document.createElement("link").relList;
   if (t && t.supports && t.supports("modulepreload")) return;
+
+  // Pré-carrega todos os links modulepreload existentes
   for (const s of document.querySelectorAll('link[rel="modulepreload"]')) r(s);
+
+  // Observa o documento para novos links modulepreload e pré-carrega-os
   new MutationObserver((s) => {
     for (const o of s)
       if (o.type === "childList")
         for (const i of o.addedNodes)
           i.tagName === "LINK" && i.rel === "modulepreload" && r(i);
   }).observe(document, { childList: !0, subtree: !0 });
+
+  // Função auxiliar para obter opções de busca de um elemento de link
   function n(s) {
     const o = {};
     return (
@@ -21,6 +28,8 @@
       o
     );
   }
+
+  // Função auxiliar para pré-carregar um módulo
   function r(s) {
     if (s.ep) return;
     s.ep = !0;
@@ -28,12 +37,16 @@
     fetch(s.href, o);
   }
 })();
+
+// Função auxiliar para criar um objeto com chaves de uma string separada por vírgulas
 function Jn(e, t) {
   const n = Object.create(null),
     r = e.split(",");
   for (let s = 0; s < r.length; s++) n[r[s]] = !0;
   return t ? (s) => !!n[s.toLowerCase()] : (s) => !!n[s];
 }
+
+// Algumas constantes e funções auxiliares
 const J = {},
   at = [],
   Ce = () => {},
@@ -62,12 +75,13 @@ const J = {},
   ws = (e) => dn(e) === "[object Object]",
   er = (e) =>
     ee(e) && e !== "NaN" && e[0] !== "-" && "" + parseInt(e, 10) === e,
-  Gt = Jn(
+Gt = Jn(
     ",key,ref,ref_for,ref_key,onVnodeBeforeMount,onVnodeMounted,onVnodeBeforeUpdate,onVnodeUpdated,onVnodeBeforeUnmount,onVnodeUnmounted"
-  ),
-  hn = (e) => {
-    const t = Object.create(null);
-    return (n) => t[n] || (t[n] = e(n));
+),
+// Função auxiliar para memorizar uma função
+hn = (e) => {
+  const t = Object.create(null);
+  return (n) => t[n] || (t[n] = e(n));
   },
   Fo = /-(\w)/g,
   $e = hn((e) => e.replace(Fo, (t, n) => (n ? n.toUpperCase() : ""))),
@@ -80,12 +94,14 @@ const J = {},
     for (let n = 0; n < e.length; n++) e[n](t);
   },
   rn = (e, t, n) => {
-    Object.defineProperty(e, t, { configurable: !0, enumerable: !1, value: n });
+  Object.defineProperty(e, t, { configurable: !0, enumerable: !1, value: n });
   },
   $o = (e) => {
-    const t = parseFloat(e);
-    return isNaN(t) ? e : t;
-  };
+  const t = parseFloat(e);
+  return isNaN(t) ? e : t;
+};
+
+// Função auxiliar para obter o objeto global
 let Cr;
 const Nn = () =>
   Cr ||
@@ -99,6 +115,8 @@ const Nn = () =>
       : typeof global < "u"
       ? global
       : {});
+
+// Função auxiliar para mesclar uma matriz de objetos ou strings em um único objeto ou string
 function tr(e) {
   if (L(e)) {
     const t = {};
@@ -113,9 +131,13 @@ function tr(e) {
     if (X(e)) return e;
   }
 }
+
+// Expressões regulares para analisar estilos CSS inline
 const Lo = /;(?![^(]*\))/g,
   jo = /:([^]+)/,
   Ho = /\/\*[^]*?\*\//g;
+
+// Função auxiliar para analisar estilos CSS inline em um objeto
 function Bo(e) {
   const t = {};
   return (
@@ -131,6 +153,8 @@ function Bo(e) {
     t
   );
 }
+
+// Função auxiliar para converter uma matriz ou objeto de nomes de classe em uma string
 function nr(e) {
   let t = "";
   if (ee(e)) t = e;
@@ -142,12 +166,20 @@ function nr(e) {
   else if (X(e)) for (const n in e) e[n] && (t += n + " ");
   return t.trim();
 }
+
+// Lista separada por vírgulas de atributos booleanos que devem ser tratados como verdadeiros quando presentes com qualquer valor ou sem valor algum.
 const Do =
     "itemscope,allowfullscreen,formnovalidate,ismap,nomodule,novalidate,readonly",
-  Ko = Jn(Do);
+  
+// Função auxiliar para verificar se um atributo é um atributo booleano que deve ser tratado como verdadeiro quando presente com qualquer valor ou sem valor algum.
+Ko = Jn(Do);
+
+// Função auxiliar para verificar se um valor de atributo é verdadeiro ou falso.
 function Rs(e) {
   return !!e || e === "";
 }
+
+// Função auxiliar para converter qualquer valor em uma string.
 const gu = (e) =>
     ee(e)
       ? e
@@ -156,7 +188,9 @@ const gu = (e) =>
       : L(e) || (X(e) && (e.toString === xs || !B(e.toString)))
       ? JSON.stringify(e, Ps, 2)
       : String(e),
-  Ps = (e, t) =>
+  
+// Função de substituição para JSON.stringify que lida com Maps, Sets e Refs.
+Ps = (e, t) =>
     t && t.__v_isRef
       ? Ps(e, t.value)
       : dt(t)
@@ -171,19 +205,29 @@ const gu = (e) =>
       : X(t) && !L(t) && !ws(t)
       ? String(t)
       : t;
+
 let xe;
+// Classe para representar um escopo de efeito
 class ko {
   constructor(t = !1) {
+    // Indica se o escopo está desanexado
     (this.detached = t),
+      // Indica se o escopo está ativo
       (this._active = !0),
+      // Matriz de efeitos no escopo
       (this.effects = []),
+      // Matriz de funções de limpeza no escopo
       (this.cleanups = []),
+      // Escopo pai do escopo atual
       (this.parent = xe),
+      // Se o escopo não estiver desanexado e tiver um escopo pai, adicione-o aos escopos filhos do escopo pai
       !t && xe && (this.index = (xe.scopes || (xe.scopes = [])).push(this) - 1);
   }
+  // Getter para a propriedade active
   get active() {
     return this._active;
   }
+  // Executa uma função dentro do escopo atual
   run(t) {
     if (this._active) {
       const n = xe;
@@ -194,45 +238,67 @@ class ko {
       }
     }
   }
+  // Ativa o escopo atual
   on() {
     xe = this;
   }
+  // Desativa o escopo atual
   off() {
     xe = this.parent;
   }
+  // Para o escopo atual e todos os seus efeitos e escopos filhos
   stop(t) {
     if (this._active) {
       let n, r;
+      // Para todos os efeitos no escopo atual
       for (n = 0, r = this.effects.length; n < r; n++) this.effects[n].stop();
-      for (n = 0, r = this.cleanups.length; n < r; n++) this.cleanups[n]();
+      // Executa todas as funções de limpeza no escopo atual
+      for (n = 0, r = this.cleanups.length; n < r; n++) this.cleanupsn;
+      // Para todos os escopos filhos do escopo atual
       if (this.scopes)
         for (n = 0, r = this.scopes.length; n < r; n++) this.scopes[n].stop(!0);
+      // Se o escopo não estiver desanexado e tiver um escopo pai, remova-o dos escopos filhos do escopo pai
       if (!this.detached && this.parent && !t) {
         const s = this.parent.scopes.pop();
         s &&
           s !== this &&
           ((this.parent.scopes[this.index] = s), (s.index = this.index));
       }
+      // Limpa as propriedades do escopo e define a propriedade active como false
       (this.parent = void 0), (this._active = !1);
     }
   }
 }
+
+// Função auxiliar para adicionar um efeito a um escopo de efeito
 function Uo(e, t = xe) {
   t && t.active && t.effects.push(e);
 }
+
+// Função auxiliar para obter o escopo de efeito ativo atualmente
 function Wo() {
   return xe;
 }
+
+// Função auxiliar para criar um conjunto com uma propriedade w e uma propriedade n adicionais.
 const rr = (e) => {
     const t = new Set(e);
     return (t.w = 0), (t.n = 0), t;
   },
-  Cs = (e) => (e.w & Ye) > 0,
-  As = (e) => (e.n & Ye) > 0,
-  zo = ({ deps: e }) => {
+  
+// Função auxiliar para verificar se um conjunto tem a propriedade w definida como verdadeira.
+Cs = (e) => (e.w & Ye) > 0,
+
+// Função auxiliar para verificar se um conjunto tem a propriedade n definida como verdadeira.
+As = (e) => (e.n & Ye) > 0,
+
+// Função auxiliar para definir a propriedade w de todos os conjuntos nas dependências de um efeito como verdadeira.
+zo = ({ deps: e }) => {
     if (e.length) for (let t = 0; t < e.length; t++) e[t].w |= Ye;
-  },
-  qo = (e) => {
+},
+
+// Função auxiliar para remover dependências não utilizadas de um efeito.
+qo = (e) => {
     const { deps: t } = e;
     if (t.length) {
       let n = 0;
@@ -245,22 +311,37 @@ const rr = (e) => {
       t.length = n;
     }
   },
-  $n = new WeakMap();
+  
+// Mapa fraco para armazenar informações adicionais sobre objetos reativos.
+$n = new WeakMap();
+
+// Variáveis ​​para rastrear o estado atual do rastreamento de dependência.
 let Tt = 0,
   Ye = 1;
 const Ln = 30;
 let Re;
+
+// Símbolos para propriedades internas de objetos reativos.
 const rt = Symbol(""),
   jn = Symbol("");
+
+// Classe para representar um efeito reativo
 class sr {
   constructor(t, n = null, r) {
+    // Função do efeito
     (this.fn = t),
+      // Agendador do efeito
       (this.scheduler = n),
+      // Indica se o efeito está ativo
       (this.active = !0),
+      // Matriz de dependências do efeito
       (this.deps = []),
+      // Escopo pai do efeito
       (this.parent = void 0),
+      // Adiciona o efeito ao escopo de efeito atual, se houver um
       Uo(this, r);
   }
+  // Executa o efeito e rastreia suas dependências
   run() {
     if (!this.active) return this.fn();
     let t = Re,
@@ -271,13 +352,20 @@ class sr {
     }
     try {
       return (
+        // Define o escopo pai do efeito como o escopo de efeito ativo atualmente
         (this.parent = Re),
+        // Define o escopo de efeito ativo atualmente como o escopo pai do efeito
         (Re = this),
+        // Ativa o rastreamento de dependência
         (Ve = !0),
+        // Atualiza a máscara de bits para rastreamento de dependência
         (Ye = 1 << ++Tt),
+        // Se ainda houver bits disponíveis na máscara, atualize as dependências do efeito usando a máscara de bits
         Tt <= Ln ? zo(this) : Ar(this),
+        // Executa a função do efeito
         this.fn()
       );
+
     } finally {
       Tt <= Ln && qo(this),
         (Ye = 1 << --Tt),
